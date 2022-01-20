@@ -1,0 +1,3 @@
+-tRPC allows the FE to consume typesafe APIs, whiout schemas or code generation
+-tRPC abstract these: API schema, service.
+-the /api folder of NextJs lets you define an EP that returns on a lamba and returns a JSON
