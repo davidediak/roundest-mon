@@ -1,10 +1,11 @@
+import {inferQueryResponse} from '@/pages/api/trpc/[trpc]';
 import {getOptionsForVote} from '@/utils/getRandomPokemon';
 import {trpc} from '@/utils/trpc';
 import type {NextPage} from 'next';
 import {useMemo, useState} from 'react';
 
 const btn =
-  "inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500";
+    'inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500';
 
 const Home: NextPage = () => {
     const [[firstId, secondId], updateIds] = useState(() => getOptionsForVote());
@@ -22,33 +23,40 @@ const Home: NextPage = () => {
             <div className="text-2xl text-center">Which Pokemon is Rounder?</div>
             <div className="p-2"></div>
             <div className="border rounded p-8 flex justify-between">
-                <div className="w-64 h-64 flex flex-col items-center">
-                    <img
-                        src={firstPokemon.data?.sprites.front_default ?? undefined}
-                        className="w-full"
-                    />
-                    <div className="text-xl text-center capitalize mt-[-2rem]">
-                        {firstPokemon.data?.name}
-                    </div>
-                    <button type="button" className={btn} onClick={() => voteForRoundest(firstId)}>
-                        Rounder
-                    </button>
-                </div>
-                <div className="p-8">VS</div>
-                <div className="w-64 h-64 flex flex-col items-center">
-                    <img
-                        src={secondPokemon.data?.sprites.front_default ?? undefined}
-                        className="w-full"
-                    />
-                    <div className="text-xl text-center capitalize mt-[-2rem]">
-                        {secondPokemon.data?.name}
-                    </div>
-                    <button type="button" className={btn} onClick={() => voteForRoundest(secondId)}>
-                        Rounder
-                    </button>
-                </div>
+                {!firstPokemon.isLoading && !secondPokemon.isLoading && (
+                    <>
+                        <PokemonListing
+                            pokemon={firstPokemon.data as any}
+                            vote={() => voteForRoundest(firstId)}
+                        />
+                        <div className="p-8">VS</div>
+                        <PokemonListing
+                            pokemon={secondPokemon.data as any}
+                            vote={() => voteForRoundest(secondId)}
+                        />
+                    </>
+                )}
+
                 <div className="p-2"></div>
             </div>
+        </div>
+    );
+};
+
+type PokemonFromServer = inferQueryResponse<'get-pokemon-by-id'>;
+
+const PokemonListing: React.FC<{
+    pokemon: PokemonFromServer;
+    vote: () => void;
+}> = (props) => {
+    return (
+        <div className={` flex flex-col items-center transition-opacity`}>
+            <div className="text-xl text-center capitalize mt-[-0.5rem]">{props.pokemon.name}</div>
+
+            <img src={props.pokemon.sprites.front_default ?? undefined} className="w-64 h-64" />
+            <button className={btn} onClick={() => props.vote()}>
+                Rounder
+            </button>
         </div>
     );
 };
