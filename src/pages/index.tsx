@@ -12,9 +12,14 @@ const Home: NextPage = () => {
     const firstPokemon = trpc.useQuery(['get-pokemon-by-id', {id: firstId}]);
     const secondPokemon = trpc.useQuery(['get-pokemon-by-id', {id: secondId}]);
 
+    const voteMutation = trpc.useMutation(['cast-vote']);
+
     if (firstPokemon.isLoading || secondPokemon.isLoading) return null;
 
     const voteForRoundest = (selected: number) => {
+        if (selected === firstId) {
+            voteMutation.mutate({votedFor: firstId, votedAgainst: secondId});
+        }
         updateIds(getOptionsForVote());
     };
 
