@@ -2,7 +2,8 @@ import {inferQueryResponse} from '@/pages/api/trpc/[trpc]';
 import {getOptionsForVote} from '@/utils/getRandomPokemon';
 import {trpc} from '@/utils/trpc';
 import type {NextPage} from 'next';
-import {useMemo, useState} from 'react';
+import {useState} from 'react';
+import Image from 'next/image';
 
 const btn =
     'inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500';
@@ -57,8 +58,12 @@ const PokemonListing: React.FC<{
     return (
         <div className={` flex flex-col items-center transition-opacity`}>
             <div className="text-xl text-center capitalize mt-[-0.5rem]">{props.pokemon.name}</div>
-
-            <img src={props.pokemon.sprites.front_default ?? undefined} className="w-64 h-64" />
+            <Image
+                src={props.pokemon.sprites.front_default ?? ''}
+                width={256}
+                height={256}
+                layout="fixed"
+            />
             <button className={btn} onClick={() => props.vote()}>
                 Rounder
             </button>
