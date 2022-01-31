@@ -22,7 +22,7 @@ export const appRouter = trpc
         }),
         async resolve({input}) {
             const voteInDb = await prisma.vote.create({
-                data: {...input},
+                data: {votedAgainstId: input.votedAgainst, votedForId: input.votedFor},
             });
             return {success: true, vote: voteInDb};
         },
