@@ -57,9 +57,9 @@ const PokemonListing: React.FC<{
 }> = (props) => {
     return (
         <div className={` flex flex-col items-center transition-opacity`}>
-            <div className="text-xl text-center capitalize mt-[-0.5rem]">{props.pokemon.name}</div>
+            <div className="text-xl text-center capitalize mt-[-0.5rem]">{props.pokemon?.name}</div>
             <Image
-                src={props.pokemon.sprites.front_default ?? ''}
+                src={props.pokemon?.spriteUrl ?? ''}
                 width={256}
                 height={256}
                 layout="fixed"
